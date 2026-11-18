@@ -169,7 +169,7 @@ footer { padding: 36px 0 60px; font: 400 13px/1.55 'PlexSans'; color: var(--cinz
       <div class="metodo" id="metodo"><span>Você pede</span><span>A IA monta</span><span>Você confere</span><span>Você publica</span></div>
       <div class="preco"><b>R$ 67</b><span>garantia de 7 dias</span></div>
       <a class="btn" id="cta-hero" href="CHECKOUT">Quero o guia</a>
-      <p class="meta">Livro em PDF, planilha de exemplo, modelo pronto (.pbit) e 3 skills.<br>Para quem já usa Power BI e quer produzir mais rápido sem perder o controle.</p>
+      <p class="meta">Livro em PDF, planilha de exemplo, modelo pronto (.pbit) e 3 skills.<br>Os gráficos são <strong>visuais nativos do Power BI</strong>, editáveis como em qualquer relatório, e não páginas em HTML.<br>Para quem já usa Power BI e quer produzir mais rápido sem perder o controle.</p>
     </div>
     <div class="capa3d" id="capa3d"><div class="alvo" id="alvo"><img src="capa.jpg" alt="Capa do livro Turbine o Power BI com IA"></div>
       <div class="chip a">Planilha</div><div class="chip b">Modelo .pbit</div><div class="chip c">3 skills</div></div>
@@ -251,6 +251,7 @@ footer { padding: 36px 0 60px; font: 400 13px/1.55 'PlexSans'; color: var(--cinz
     <h2>Antes de comprar</h2>
     <details><summary>Preciso saber programar?</summary><p>Não. Você escreve pedidos em português e confere os resultados. O vocabulário esperado é o de quem já usa Power BI: tabela, medida, filtro, relatório.</p></details>
     <details><summary>Preciso pagar por alguma ferramenta?</summary><p>O Power BI Desktop e os editores citados são gratuitos. Os modelos de IA têm plano gratuito com limites ou assinatura paga, e os valores mudam com frequência: confira na página de cada fornecedor. Para publicar e compartilhar relatórios, o Power BI exige uma licença (o livro explica qual).</p></details>
+    <details><summary>Os visuais são do Power BI ou são páginas em HTML?</summary><p>São os visuais nativos do Power BI: barras, linhas, cartões, tabelas e filtros, os mesmos do painel Visualizações. Você clica, troca os campos e formata como em qualquer relatório. Só o fundo da página pode ser uma imagem, e serve de moldura, sem textos nem números.</p></details>
     <details><summary>A IA não erra?</summary><p>Erra, e o livro parte disso. Um capítulo inteiro mostra onde ela costuma errar, como provar que o número está certo e como ajustar sem a IA.</p></details>
     <details><summary>Funciona na empresa onde trabalho?</summary><p>Depende das regras da sua TI. O capítulo 4B mostra o caminho para empresas com GitHub corporativo, o que pedir à TI e o que fazer se a empresa não liberar.</p></details>
     <details><summary>Como recebo o material?</summary><p>Depois do pagamento na Kiwify, você acessa o livro em PDF e os arquivos que o acompanham (planilha, modelo .pbit e skills).</p></details>
@@ -324,7 +325,7 @@ function resultado() {
 /* --- método: quatro passos --- */
 const PASSOS = [
   { n: '1', t: 'Você pede', tx: 'Em vez de um pedido gigante, você usa um roteiro de escopo: briefing, dados, modelo, medidas, visuais e tema. O livro dá as frases-modelo e você escreve o pedido com o seu caso.', r: 'Capítulo 8' },
-  { n: '2', t: 'A IA monta', tx: 'Pela ponte (MCP), a IA lê e altera o modelo do Power BI aberto e escreve nos arquivos do projeto. Ela cria tabelas, relacionamentos, medidas e páginas, com as skills do livro como manual.', r: 'Capítulos 4, 6 e 7' },
+  { n: '2', t: 'A IA monta', tx: 'Pela ponte (MCP), a IA lê e altera o modelo do Power BI aberto e escreve nos arquivos do projeto. Ela cria tabelas, relacionamentos, medidas e páginas com visuais nativos do Power BI, usando as skills do livro como manual.', r: 'Capítulos 4, 6 e 7' },
   { n: '3', t: 'Você confere', tx: 'Três números contra a origem, os filtros e os totais. O livro mostra onde a IA costuma errar e como pedir uma correção curta, sem estragar o resto.', r: 'Capítulo 9' },
   { n: '4', t: 'Você publica', tx: 'Atualização dos dados, publicação no Power BI Service, atualização agendada, segurança e entrega de um modelo sem dados. O resultado é um relatório comum, que qualquer analista abre e edita.', r: 'Capítulos 10 e 11' },
 ];
