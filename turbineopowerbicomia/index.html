@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Turbine o Power BI com IA | Guia prático</title>
+<meta name="description" content="Deixe a IA fazer o trabalho difícil dentro do Power BI: você pede, confere e publica. Guia passo a passo com planilha, modelo .pbit e skills.">
+<meta property="og:title" content="Turbine o Power BI com IA">
+<meta property="og:description" content="Deixe a IA fazer o trabalho difícil dentro do Power BI: você pede, confere e publica.">
+<meta property="og:image" content="capa.jpg">
+<style>
+@font-face { font-family: 'PlexSerif'; src: url('fontes/IBMPlexSerif-Regular.ttf'); font-weight: 400; font-style: normal; }
+@font-face { font-family: 'PlexSerif'; src: url('fontes/IBMPlexSerif-Italic.ttf'); font-weight: 400; font-style: italic; }
+@font-face { font-family: 'PlexSerif'; src: url('fontes/IBMPlexSerif-SemiBold.ttf'); font-weight: 600; font-style: normal; }
+@font-face { font-family: 'PlexSans'; src: url('fontes/IBMPlexSans-Var.ttf'); font-weight: 100 700; }
+@font-face { font-family: 'PlexCond'; src: url('fontes/IBMPlexSansCondensed-SemiBold.ttf'); font-weight: 600; }
+@font-face { font-family: 'PlexCond'; src: url('fontes/IBMPlexSansCondensed-Bold.ttf'); font-weight: 700; }
+:root { --tinta:#141922; --azul:#2563EB; --ambar:#F5B83D; --papel:#F2EEE4; --cartao:#FBF8F1; --cinza:#6B7488; --marinho:#0A1020; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--papel); color: var(--tinta); font: 400 18px/1.6 'PlexSerif', Georgia, serif; overflow-x: hidden; }
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+h1, h2, h3 { font-family: 'PlexCond', 'PlexSans', Arial, sans-serif; font-weight: 700; line-height: 1.05; margin: 0; }
+.k { font: 600 12px 'PlexCond'; letter-spacing: .28em; color: var(--azul); text-transform: uppercase; margin-bottom: 10px; }
+section { padding: 72px 0; border-top: 1px solid rgba(10,16,32,.15); position: relative; }
+h2 { font-size: clamp(30px, 5vw, 46px); margin-bottom: 18px; }
+p { margin: 0 0 14px; }
+.lead { font: italic 400 21px/1.5 'PlexSerif'; color: #3B4357; max-width: 54em; }
+.btn { display: inline-block; background: var(--marinho); color: #fff; text-decoration: none; font: 700 17px 'PlexCond'; letter-spacing: .08em; text-transform: uppercase; padding: 17px 28px; border: 2px solid var(--marinho); box-shadow: 5px 5px 0 var(--ambar); transition: transform .12s, box-shadow .12s; cursor: pointer; }
+.btn:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--ambar); }
+.btn.claro { background: var(--ambar); color: var(--marinho); border-color: var(--ambar); box-shadow: 5px 5px 0 #fff; }
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.on { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } * { animation: none !important; } html { scroll-behavior: auto; } }
+
+/* barra fixa */
+.barra { position: fixed; left: 0; right: 0; top: 0; z-index: 30; background: var(--marinho); color: #fff; transform: translateY(-100%); transition: transform .3s; }
+.barra.on { transform: none; }
+.barra .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 10px; padding-bottom: 10px; }
+.barra b { font: 700 18px 'PlexCond'; letter-spacing: .02em; }
+.barra span { font: 500 14px 'PlexSans'; color: #BCC8E0; margin-left: 10px; }
+.barra .btn { padding: 10px 18px; font-size: 14px; box-shadow: 3px 3px 0 var(--ambar); }
+
+/* topo */
+.hero { padding: 40px 0 72px; border-top: 0; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 44px; align-items: center; }
+.hero h1 { font-size: clamp(46px, 7.4vw, 80px); color: var(--marinho); letter-spacing: -.01em; }
+.hero h1 em { font-style: normal; color: var(--azul); }
+.hero .lead { margin: 20px 0 22px; }
+.metodo { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.metodo span { font: 600 14px 'PlexCond'; letter-spacing: .1em; text-transform: uppercase; padding: 7px 12px; border: 1.5px solid var(--marinho); background: var(--cartao); transition: background .25s, color .25s, transform .25s; }
+.metodo span.on { background: var(--marinho); color: var(--ambar); transform: translateY(-3px); }
+.preco { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 14px; margin-bottom: 18px; font-family: 'PlexCond'; }
+.preco b { font-size: 48px; color: var(--marinho); white-space: nowrap; }
+.preco span { font: 500 15px 'PlexSans'; color: var(--cinza); }
+.meta { font: 500 14px/1.55 'PlexSans'; color: var(--cinza); margin-top: 18px; }
+.capa3d { perspective: 1100px; position: relative; max-width: 420px; justify-self: center; }
+.capa3d .alvo { transition: transform .2s ease-out; transform-style: preserve-3d; }
+.capa3d img { width: 100%; display: block; border: 1px solid var(--marinho); box-shadow: 12px 12px 0 var(--marinho); }
+.chip { position: absolute; font: 700 13px 'PlexCond'; letter-spacing: .08em; text-transform: uppercase; background: var(--ambar); border: 1.5px solid var(--marinho); padding: 6px 11px; box-shadow: 3px 3px 0 var(--marinho); animation: flutua 5s ease-in-out infinite; }
+.chip.a { left: -26px; top: 18%; } .chip.b { right: -24px; top: 46%; animation-delay: 1.3s; background: #D6E2FF; } .chip.c { left: -14px; bottom: 12%; animation-delay: 2.4s; background: var(--cartao); }
+@keyframes flutua { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-9px) rotate(2deg); } }
+
+/* teste */
+.teste { background: var(--marinho); color: #fff; }
+.teste h2 { color: #fff; }
+.teste .lead { color: #C3CEE4; }
+.perguntas { display: grid; gap: 12px; margin: 28px 0 22px; }
+.perg { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.25); padding: 16px 18px; flex-wrap: wrap; }
+.perg p { margin: 0; font: 500 18px/1.35 'PlexSans'; flex: 1 1 320px; }
+.perg .op { display: flex; gap: 8px; }
+.op button { font: 700 14px 'PlexCond'; letter-spacing: .08em; text-transform: uppercase; padding: 9px 18px; border: 1.5px solid #fff; background: transparent; color: #fff; cursor: pointer; }
+.op button.sel-s { background: #34D399; border-color: #34D399; color: var(--marinho); }
+.op button.sel-n { background: var(--ambar); border-color: var(--ambar); color: var(--marinho); }
+.resultado { min-height: 120px; background: var(--cartao); color: var(--tinta); padding: 22px 24px; border: 2px solid var(--ambar); display: none; }
+.resultado.on { display: block; animation: surge .4s ease; }
+@keyframes surge { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.resultado h3 { font-size: 26px; margin-bottom: 8px; color: var(--azul); }
+.resultado .caps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.pill { font: 700 13px 'PlexCond'; letter-spacing: .06em; text-transform: uppercase; padding: 7px 12px; border: 1.5px solid var(--marinho); background: #fff; cursor: pointer; }
+.pill:hover { background: var(--ambar); }
+
+/* passos */
+.passos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 28px 0 0; border: 1.5px solid var(--marinho); }
+.passos button { text-align: left; background: var(--cartao); border: 0; border-right: 1.5px solid var(--marinho); padding: 18px 18px 20px; cursor: pointer; font: inherit; color: inherit; transition: background .2s; }
+.passos button:last-child { border-right: 0; }
+.passos button b { display: block; font: 700 38px/1 'PlexCond'; color: var(--azul); margin-bottom: 6px; }
+.passos button span { font: 700 18px 'PlexCond'; text-transform: uppercase; letter-spacing: .04em; }
+.passos button.on { background: var(--marinho); color: #fff; }
+.passos button.on b { color: var(--ambar); }
+.painel { border: 1.5px solid var(--marinho); border-top: 0; background: #fff; padding: 30px 34px; min-height: 160px; }
+.painel p { margin: 0; font-size: 20px; line-height: 1.55; max-width: 52em; }
+.painel .ref { display: inline-block; margin-top: 12px; font: 600 13px 'PlexCond'; letter-spacing: .1em; text-transform: uppercase; color: var(--azul); }
+
+/* carrossel */
+.carrossel { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 26px 22px 30px; margin: 10px -22px 0; scrollbar-width: thin; }
+.cap-card { flex: 0 0 210px; scroll-snap-align: start; background: none; border: 0; padding: 0; cursor: pointer; text-align: left; font: inherit; color: inherit; transition: transform .2s; }
+.cap-card img { width: 100%; display: block; border: 1px solid var(--marinho); box-shadow: 6px 6px 0 var(--marinho); transition: box-shadow .2s, transform .2s; }
+.cap-card:hover img { transform: translate(-3px, -5px) rotate(-1deg); box-shadow: 10px 12px 0 var(--marinho); }
+.cap-card span { display: block; margin-top: 14px; font: 600 14px/1.3 'PlexSans'; }
+.cap-card b { font-family: 'PlexCond'; color: var(--azul); margin-right: 6px; }
+.dica { font: 500 14px 'PlexSans'; color: var(--cinza); }
+dialog { border: 2px solid var(--marinho); background: var(--cartao); padding: 0; max-width: 880px; width: calc(100% - 28px); box-shadow: 10px 10px 0 var(--marinho); }
+dialog::backdrop { background: rgba(10,16,32,.72); }
+.modal { display: grid; grid-template-columns: 300px 1fr; }
+.modal img { width: 100%; display: block; border-right: 2px solid var(--marinho); }
+.modal .tx { padding: 26px 26px 22px; display: flex; flex-direction: column; }
+.modal h3 { font-size: 30px; margin: 6px 0 14px; }
+.modal .nav { margin-top: auto; display: flex; gap: 8px; flex-wrap: wrap; padding-top: 18px; }
+.modal .nav button { font: 700 13px 'PlexCond'; letter-spacing: .08em; text-transform: uppercase; padding: 10px 16px; border: 1.5px solid var(--marinho); background: #fff; cursor: pointer; }
+.modal .nav .fecha { background: var(--marinho); color: #fff; margin-left: auto; }
+
+/* pacote */
+.pacote { background: var(--marinho); color: #fff; }
+.pacote h2 { color: #fff; }
+.itens { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 26px 0 30px; }
+.item { border: 1.5px solid rgba(255,255,255,.35); padding: 18px 20px; background: rgba(255,255,255,.05); transition: background .2s, transform .2s; }
+.item:hover { background: rgba(255,255,255,.1); transform: translateY(-3px); }
+.item b { display: block; font: 700 22px 'PlexCond'; color: var(--ambar); margin-bottom: 4px; }
+.item p { margin: 0; font-size: 16px; color: #DCE4F5; }
+
+/* listas e faq */
+.dois { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.lista { list-style: none; padding: 0; margin: 18px 0; }
+.lista li { display: flex; align-items: center; gap: 16px; padding: 15px 0; border-bottom: 1px solid rgba(10,16,32,.18); }
+.lista li b { font: 700 26px/1 'PlexCond'; color: var(--azul); min-width: 22px; text-align: center; }
+details { background: var(--cartao); border: 1.5px solid var(--marinho); margin-bottom: 12px; }
+summary { cursor: pointer; padding: 16px 20px; font: 600 18px 'PlexSans'; list-style: none; }
+summary::after { content: '+'; float: right; font-weight: 700; color: var(--azul); }
+details[open] summary::after { content: '–'; }
+details p { padding: 0 20px 6px; margin: 0 0 12px; font-size: 16px; }
+.garantia { background: var(--ambar); padding: 30px 32px; border: 2px solid var(--marinho); box-shadow: 6px 6px 0 var(--marinho); }
+.garantia h2 { font-size: 34px; margin-bottom: 8px; }
+.compre { text-align: center; }
+.compre .cartao { max-width: 520px; margin: 26px auto 0; background: var(--cartao); border: 2px solid var(--marinho); box-shadow: 8px 8px 0 var(--marinho); padding: 30px; text-align: left; }
+.compre .cartao .preco b { font-size: 58px; }
+.compre ul { list-style: none; padding: 0; margin: 0 0 22px; font: 500 16px/1.4 'PlexSans'; }
+.compre li { padding: 7px 0 7px 26px; position: relative; }
+.compre li::before { content: '✓'; position: absolute; left: 0; color: var(--azul); font-weight: 700; }
+footer { padding: 36px 0 60px; font: 400 13px/1.55 'PlexSans'; color: var(--cinza); }
+
+@media (max-width: 860px) {
+  .hero .wrap, .dois, .modal { grid-template-columns: 1fr; }
+  .passos button { padding: 14px; }
+  .modal img { max-height: 360px; object-fit: cover; object-position: top; border-right: 0; border-bottom: 2px solid var(--marinho); }
+  .passos { grid-template-columns: 1fr 1fr; }
+  .passos button:nth-child(2) { border-right: 0; }
+  .passos button:nth-child(-n+2) { border-bottom: 1.5px solid var(--marinho); }
+  .itens { grid-template-columns: 1fr; }
+  .capa3d { max-width: 330px; }
+  .chip.a { left: -8px; } .chip.b { right: -6px; }
+  .barra span { display: none; }
+  body { font-size: 17px; }
+}
+</style>
+</head>
+<body>
+<!-- Antes de publicar: troque o endereço CHECKOUT (botões) pelo link de compra da Kiwify. Gerado por src/pagina_venda.py a partir de modelo.html -->
+
+<div class="barra" id="barra"><div class="wrap"><div><b>Turbine o Power BI com IA</b><span>R$ 67 · garantia de 7 dias</span></div><a class="btn" href="CHECKOUT">Quero o guia</a></div></div>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="k">Guia prático · Power BI + IA</div>
+      <h1>Turbine o <em>Power BI</em> com IA</h1>
+      <p class="lead">Deixe a IA fazer o trabalho difícil dentro do Power BI: você pede, confere e publica.</p>
+      <div class="metodo" id="metodo"><span>Você pede</span><span>A IA monta</span><span>Você confere</span><span>Você publica</span></div>
+      <div class="preco"><b>R$ 67</b><span>garantia de 7 dias</span></div>
+      <a class="btn" id="cta-hero" href="CHECKOUT">Quero o guia</a>
+      <p class="meta">Livro em PDF, planilha de exemplo, modelo pronto (.pbit) e 3 skills.<br>Para quem já usa Power BI e quer produzir mais rápido sem perder o controle.</p>
+    </div>
+    <div class="capa3d" id="capa3d"><div class="alvo" id="alvo"><img src="capa.jpg" alt="Capa do livro Turbine o Power BI com IA"></div>
+      <div class="chip a">Planilha</div><div class="chip b">Modelo .pbit</div><div class="chip c">3 skills</div></div>
+  </div>
+</section>
+
+<section class="teste">
+  <div class="wrap">
+    <div class="k" style="color:#F5B83D">Teste rápido</div>
+    <h2>O seu relatório feito por IA passaria?</h2>
+    <p class="lead">Responda com sinceridade, só para você. São quatro perguntas que o seu chefe costuma fazer.</p>
+    <div class="perguntas" id="perguntas"></div>
+    <div class="resultado" id="resultado"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="k">O método</div>
+    <h2>Quatro movimentos, sempre na mesma ordem</h2>
+    <p class="lead">A IA trabalha rápido e erra. O livro organiza o trabalho para você ganhar a velocidade sem entregar um número que ninguém conferiu.</p>
+    <div class="passos" id="passos"></div>
+    <div class="painel" id="painel"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="k">Capítulo por capítulo</div>
+    <h2>Folheie o livro</h2>
+    <p class="lead">Cada capítulo abre com a sua própria ilustração. Clique para ver o que você vai ter no fim dele.</p>
+  </div>
+  <div class="wrap"><div class="carrossel" id="carrossel"></div><div class="dica">Arraste para o lado ou clique em um capítulo.</div></div>
+</section>
+
+<dialog id="modal"><div class="modal"><img id="m-img" alt=""><div class="tx"><div class="k" id="m-num"></div><h3 id="m-tit"></h3><p id="m-leva"></p>
+  <div class="nav"><button id="m-ant">← Anterior</button><button id="m-prox">Próximo →</button><button class="fecha" id="m-fecha">Fechar</button></div></div></div></dialog>
+
+<section class="pacote">
+  <div class="wrap reveal">
+    <div class="k" style="color:#F5B83D">O que vem no pacote</div>
+    <h2>Livro, planilha, modelo pronto e skills</h2>
+    <div class="itens">
+      <div class="item"><b>O livro em PDF</b><p>14 capítulos, anexos e um guia rápido de dez passos para quem já sabe o básico e quer começar logo.</p></div>
+      <div class="item"><b>Planilha de exemplo</b><p>Gestão comercial, com dados fictícios. É a base do capítulo do primeiro relatório.</p></div>
+      <div class="item"><b>Modelo pronto (.pbit)</b><p>O relatório já montado, para você comparar com o seu resultado.</p></div>
+      <div class="item"><b>Três skills</b><p>Manuais prontos para a IA: DAX, modelagem em estrela e design de relatório.</p></div>
+    </div>
+    <a class="btn claro" href="CHECKOUT">Quero o guia por R$ 67</a>
+  </div>
+</section>
+
+<section>
+  <div class="wrap dois reveal">
+    <div>
+      <div class="k">Para quem é</div>
+      <h2>É para você se…</h2>
+      <ul class="lista">
+        <li><b>+</b><span>Você já usa Power BI (tabelas, medidas, filtros) e quer produzir mais rápido.</span></li>
+        <li><b>+</b><span>Quer usar IA no trabalho sem entregar um relatório que ninguém consegue conferir.</span></li>
+        <li><b>+</b><span>Trabalha numa empresa e precisa de algo que a TI aceite (há um capítulo só sobre isso).</span></li>
+      </ul>
+    </div>
+    <div>
+      <div class="k">Para quem não é</div>
+      <h2>Talvez não seja se…</h2>
+      <ul class="lista">
+        <li><b>–</b><span>Você nunca abriu o Power BI: o livro assume o vocabulário básico de quem já usa.</span></li>
+        <li><b>–</b><span>Espera um relatório pronto sem conferir nada: aqui a conferência faz parte do método.</span></li>
+        <li><b>–</b><span>Usa Mac e não tem acesso a Windows: o Power BI Desktop só roda em Windows.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap reveal">
+    <div class="k">Perguntas frequentes</div>
+    <h2>Antes de comprar</h2>
+    <details><summary>Preciso saber programar?</summary><p>Não. Você escreve pedidos em português e confere os resultados. O vocabulário esperado é o de quem já usa Power BI: tabela, medida, filtro, relatório.</p></details>
+    <details><summary>Preciso pagar por alguma ferramenta?</summary><p>O Power BI Desktop e os editores citados são gratuitos. Os modelos de IA têm plano gratuito com limites ou assinatura paga, e os valores mudam com frequência: confira na página de cada fornecedor. Para publicar e compartilhar relatórios, o Power BI exige uma licença (o livro explica qual).</p></details>
+    <details><summary>A IA não erra?</summary><p>Erra, e o livro parte disso. Um capítulo inteiro mostra onde ela costuma errar, como provar que o número está certo e como ajustar sem a IA.</p></details>
+    <details><summary>Funciona na empresa onde trabalho?</summary><p>Depende das regras da sua TI. O capítulo 4B mostra o caminho para empresas com GitHub corporativo, o que pedir à TI e o que fazer se a empresa não liberar.</p></details>
+    <details><summary>Como recebo o material?</summary><p>Depois do pagamento na Kiwify, você acessa o livro em PDF e os arquivos que o acompanham (planilha, modelo .pbit e skills).</p></details>
+    <details><summary>As ferramentas mudam. O livro envelhece?</summary><p>Elas mudam rápido, e o livro avisa isso logo no começo. Cada passo traz o que você deve ver e o que fazer se a sua tela for diferente, e o método de pedir por etapas e conferir os números vale mesmo quando um menu muda de lugar.</p></details>
+    <details><summary>E se eu não gostar?</summary><p>Você tem garantia de 7 dias, com reembolso pela própria Kiwify.</p></details>
+  </div>
+</section>
+
+<section class="compre">
+  <div class="wrap reveal">
+    <div class="k">Pronto para começar?</div>
+    <h2>Use a IA para o trabalho difícil.<br>Fique com o controle.</h2>
+    <div class="cartao">
+      <div class="preco"><b>R$ 67</b><span>garantia de 7 dias</span></div>
+      <ul><li>Livro em PDF com 14 capítulos, anexos e guia rápido</li><li>Planilha de exemplo (gestão comercial)</li><li>Modelo pronto do relatório (.pbit)</li><li>Três skills prontas para a IA</li><li>Garantia de 7 dias, com reembolso pela Kiwify</li></ul>
+      <a class="btn" href="CHECKOUT" style="display:block;text-align:center">Quero o guia</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Iago Walter. Todos os direitos reservados. Material de uso pessoal: é proibida a cópia, o compartilhamento e a revenda. Conteúdo educativo: o autor não garante resultados específicos.</p>
+    <p>Power BI e Microsoft são marcas da Microsoft; Antigravity é marca do Google; Claude é marca da Anthropic; GitHub e Copilot são marcas do GitHub; Obsidian é marca da Obsidian. Este livro é independente e não tem vínculo com nenhuma dessas empresas.</p>
+  </div>
+</footer>
+
+<script>
+const CAPS = [{"num": "01", "img": "img/c01.jpg", "titulo": "Por que o dashboard feito por IA quebra", "leva": "Você vai saber por que um dashboard bonito feito por IA costuma quebrar, quais quatro perguntas fazer a ele e como usar a IA dentro do Power BI sem perder o controle."}, {"num": "02", "img": "img/c02.jpg", "titulo": "O que você precisa e como as peças se encaixam", "leva": "Você vai saber quais são as cinco peças, o que cada uma faz, o que precisa ter instalado e quanto isso custa."}, {"num": "03", "img": "img/c03.jpg", "titulo": "Baixar e instalar o editor", "leva": "Você vai ter um editor instalado (Antigravity ou VS Code), uma pasta de projeto aberta nele, o Node.js conferido no terminal e o Power BI Desktop aberto com um relatório em branco."}, {"num": "04", "img": "img/c04.jpg", "titulo": "Conectar a IA ao Power BI", "leva": "Você vai ter a ponte do Power BI ligada ao seu editor (e ao Claude Code, se quiser), o primeiro teste de conexão feito e a IA lendo o seu modelo em modo somente leitura."}, {"num": "4B", "img": "img/c04b.jpg", "titulo": "Usar isso dentro de uma empresa grande", "leva": "Você vai ter o VS Code com o GitHub Copilot e a extensão do Power BI na conta da empresa (ou o pedido certo para a TI liberar), saberá o que dizer à TI e à segurança e terá um plano para o caso de a empresa não liberar nada."}, {"num": "05", "img": "img/c05.jpg", "titulo": "Claude, Gemini e ChatGPT dentro do editor", "leva": "Você vai ter pelo menos um modelo de IA conversando dentro do editor e saberá escolher qual usar em cada tarefa."}, {"num": "06", "img": "img/c06.jpg", "titulo": "Como a IA lê o seu relatório: .pbix, .pbip e .pbit", "leva": "Você vai saber qual dos três formatos (.pbix, .pbip e .pbit) usar em cada momento, como salvar o relatório como .pbip e como pedir à IA para ler e explicar o projeto."}, {"num": "07", "img": "img/c07.jpg", "titulo": "Skills: ensinar a IA o seu jeito", "leva": "Você vai ter as três skills do livro instaladas, testadas, e saberá escrever uma skill sua."}, {"num": "08", "img": "img/c08.jpg", "titulo": "Seu primeiro relatório por pedido (prompt)", "leva": "Você vai ter um projeto .pbip com dados limpos, modelo em estrela, medidas e uma página de relatório, tudo feito pela IA e conferido por você."}, {"num": "09", "img": "img/c09.jpg", "titulo": "Conferir e editar sem a IA", "leva": "Você vai saber provar que os números batem com a origem, corrigir os detalhes mais comuns sozinho e pedir à IA uma correção sem estragar o resto."}, {"num": "10", "img": "img/c10.jpg", "titulo": "Atualizar os dados e publicar na empresa", "leva": "Você vai saber atualizar no Desktop, preparar o relatório para dados que crescem, publicar, agendar a atualização e entregar uma cópia sem dados."}, {"num": "11", "img": "img/c11.jpg", "titulo": "Segurança e boas práticas", "leva": "Você vai saber o que a IA enxerga, o que nunca enviar, como guardar versões com o Git e o que checar antes de publicar."}, {"num": "12", "img": "img/c12.jpg", "titulo": "Obsidian como memória do projeto (opcional)", "leva": "Você vai ter um \"cofre\" de notas que a IA lê no início e atualiza no fim do trabalho."}, {"num": "13", "img": "img/c13.jpg", "titulo": "Guia rápido: do zero ao primeiro relatório", "leva": "Você vai ter o caminho principal do livro em dez passos, para começar logo, com a seção certa para consultar se travar."}];
+const $ = (id) => document.getElementById(id);
+
+/* --- barra fixa e revelar ao rolar --- */
+const alvoHero = $('cta-hero');
+new IntersectionObserver(([e]) => $('barra').classList.toggle('on', !e.isIntersecting && e.boundingClientRect.top < 0)).observe(alvoHero);
+const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* --- capa que acompanha o mouse --- */
+const alvo = $('alvo'), c3d = $('capa3d');
+c3d.addEventListener('mousemove', (e) => { const r = c3d.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; alvo.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 10}deg)`; });
+c3d.addEventListener('mouseleave', () => { alvo.style.transform = ''; });
+
+/* --- método em destaque, em sequência --- */
+const ms = [...document.querySelectorAll('#metodo span')]; let mi = 0;
+setInterval(() => { ms.forEach((s, i) => s.classList.toggle('on', i === mi)); mi = (mi + 1) % ms.length; }, 1400);
+
+/* --- teste rápido --- */
+const PERG = [
+  { t: 'Quando a planilha muda, o seu relatório atualiza sozinho?', cap: ['10'], rotulo: 'Atualização' },
+  { t: 'Se a IA sumisse hoje, você saberia trocar uma cor, um filtro e uma medida?', cap: ['09'], rotulo: 'Editar sem a IA' },
+  { t: 'O seu chefe ou a TI aceitariam esse relatório no ambiente da empresa?', cap: ['4B', '10'], rotulo: 'Aceitação na empresa' },
+  { t: 'Você sabe para onde vão os dados que você manda para a IA?', cap: ['11'], rotulo: 'Segurança' },
+];
+const resp = new Array(PERG.length).fill(null);
+const perguntas = $('perguntas');
+PERG.forEach((p, i) => {
+  const d = document.createElement('div'); d.className = 'perg';
+  d.innerHTML = `<p>${p.t}</p><div class="op"><button data-v="s">Sim</button><button data-v="n">Não</button></div>`;
+  d.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { resp[i] = b.dataset.v; d.querySelectorAll('button').forEach(x => x.className = ''); b.className = 'sel-' + b.dataset.v; resultado(); }));
+  perguntas.appendChild(d);
+});
+function resultado() {
+  if (resp.includes(null)) return;
+  const nao = PERG.filter((_, i) => resp[i] === 'n');
+  const r = $('resultado'); r.classList.add('on');
+  if (!nao.length) { r.innerHTML = `<h3>Você já cobre o básico.</h3><p>Ótimo. O guia ainda ajuda onde a IA mais escorrega: pedir por etapas, provar que o número está certo e documentar o que foi feito.</p><div class="caps"><span class="pill" data-c="08">Capítulo 8</span><span class="pill" data-c="09">Capítulo 9</span></div>`; }
+  else { const caps = [...new Set(nao.flatMap(n => n.cap))]; r.innerHTML = `<h3>${nao.length === 1 ? 'Há 1 ponto' : 'Há ' + nao.length + ' pontos'} a resolver.</h3><p>${nao.map(n => n.rotulo).join(', ')}. É exatamente o que estes capítulos tratam:</p><div class="caps">${caps.map(c => `<span class="pill" data-c="${c}">Capítulo ${c.replace(/^0/, '')}</span>`).join('')}</div>`; }
+  r.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => abre(CAPS.findIndex(c => c.num === p.dataset.c))));
+}
+
+/* --- método: quatro passos --- */
+const PASSOS = [
+  { n: '1', t: 'Você pede', tx: 'Em vez de um pedido gigante, você usa um roteiro de escopo: briefing, dados, modelo, medidas, visuais e tema. O livro dá as frases-modelo e você escreve o pedido com o seu caso.', r: 'Capítulo 8' },
+  { n: '2', t: 'A IA monta', tx: 'Pela ponte (MCP), a IA lê e altera o modelo do Power BI aberto e escreve nos arquivos do projeto. Ela cria tabelas, relacionamentos, medidas e páginas, com as skills do livro como manual.', r: 'Capítulos 4, 6 e 7' },
+  { n: '3', t: 'Você confere', tx: 'Três números contra a origem, os filtros e os totais. O livro mostra onde a IA costuma errar e como pedir uma correção curta, sem estragar o resto.', r: 'Capítulo 9' },
+  { n: '4', t: 'Você publica', tx: 'Atualização dos dados, publicação no Power BI Service, atualização agendada, segurança e entrega de um modelo sem dados. O resultado é um relatório comum, que qualquer analista abre e edita.', r: 'Capítulos 10 e 11' },
+];
+const bp = $('passos'), painel = $('painel');
+PASSOS.forEach((p, i) => { const b = document.createElement('button'); b.innerHTML = `<b>${p.n}</b><span>${p.t}</span>`; b.addEventListener('click', () => mostra(i)); bp.appendChild(b); });
+function mostra(i) { [...bp.children].forEach((b, j) => b.classList.toggle('on', i === j)); painel.innerHTML = `<p>${PASSOS[i].tx}</p><span class="ref">Onde: ${PASSOS[i].r}</span>`; }
+mostra(0);
+
+/* --- carrossel e modal --- */
+const car = $('carrossel'), modal = $('modal'); let atual = 0;
+CAPS.forEach((c, i) => { const b = document.createElement('button'); b.className = 'cap-card'; b.innerHTML = `<img loading="lazy" src="${c.img}" alt="Abertura do capítulo ${c.num}"><span><b>${c.num}</b>${c.titulo}</span>`; b.addEventListener('click', () => abre(i)); car.appendChild(b); });
+function abre(i) { if (i < 0) return; atual = (i + CAPS.length) % CAPS.length; const c = CAPS[atual]; $('m-img').src = c.img; $('m-num').textContent = 'Capítulo ' + c.num; $('m-tit').textContent = c.titulo; $('m-leva').textContent = c.leva; if (!modal.open) modal.showModal(); }
+$('m-ant').addEventListener('click', () => abre(atual - 1)); $('m-prox').addEventListener('click', () => abre(atual + 1)); $('m-fecha').addEventListener('click', () => modal.close());
+modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+document.addEventListener('keydown', (e) => { if (!modal.open) return; if (e.key === 'ArrowRight') abre(atual + 1); if (e.key === 'ArrowLeft') abre(atual - 1); });
+
+</script>
+</body>
+</html>
