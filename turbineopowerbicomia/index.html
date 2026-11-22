@@ -55,6 +55,8 @@ p { margin: 0 0 14px; }
 .preco b { font-size: 48px; color: var(--marinho); white-space: nowrap; }
 .preco span { font: 500 15px 'PlexSans'; color: var(--cinza); }
 .meta { font: 500 14px/1.55 'PlexSans'; color: var(--cinza); margin-top: 18px; }
+.nativo { display: inline-flex; align-items: center; gap: 8px; margin: 14px 0 0; font: 600 14px/1.3 'PlexSans'; color: var(--marinho); }
+.nativo i { font-style: normal; font-weight: 700; color: #fff; background: var(--azul); width: 20px; height: 20px; flex: none; display: grid; place-items: center; font-size: 12px; }
 .capa3d { perspective: 1100px; position: relative; max-width: 420px; justify-self: center; }
 .capa3d .alvo { transition: transform .2s ease-out; transform-style: preserve-3d; }
 .capa3d img { width: 100%; display: block; border: 1px solid var(--marinho); box-shadow: 12px 12px 0 var(--marinho); }
@@ -151,6 +153,8 @@ footer { padding: 36px 0 60px; font: 400 13px/1.55 'PlexSans'; color: var(--cinz
   .capa3d { max-width: 330px; }
   .chip.a { left: -8px; } .chip.b { right: -6px; }
   .barra span { display: none; }
+  .carrossel { padding-inline: calc(50vw - min(36vw, 140px)); }
+  .cap-card { flex-basis: min(72vw, 280px); scroll-snap-align: center; }
   body { font-size: 17px; }
 }
 </style>
@@ -169,7 +173,8 @@ footer { padding: 36px 0 60px; font: 400 13px/1.55 'PlexSans'; color: var(--cinz
       <div class="metodo" id="metodo"><span>Você pede</span><span>A IA monta</span><span>Você confere</span><span>Você publica</span></div>
       <div class="preco"><b>R$ 67</b><span>garantia de 7 dias</span></div>
       <a class="btn" id="cta-hero" href="CHECKOUT">Quero o guia</a>
-      <p class="meta">Livro em PDF, planilha de exemplo, modelo pronto (.pbit) e 3 skills.<br>Os gráficos são <strong>visuais nativos do Power BI</strong>, editáveis como em qualquer relatório, e não páginas em HTML.<br>Para quem já usa Power BI e quer produzir mais rápido sem perder o controle.</p>
+      <p class="meta">Livro em PDF, planilha de exemplo, modelo pronto (.pbit) e 3 skills.<br>Para quem já usa Power BI e quer produzir mais rápido sem perder o controle.</p>
+      <p class="nativo"><i>✓</i> Visuais nativos do Power BI, editáveis como em qualquer relatório</p>
     </div>
     <div class="capa3d" id="capa3d"><div class="alvo" id="alvo"><img src="capa.jpg" alt="Capa do livro Turbine o Power BI com IA"></div>
       <div class="chip a">Planilha</div><div class="chip b">Modelo .pbit</div><div class="chip c">3 skills</div></div>
