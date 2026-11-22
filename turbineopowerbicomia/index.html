@@ -321,12 +321,17 @@ PERG.forEach((p, i) => {
   d.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { resp[i] = b.dataset.v; d.querySelectorAll('button').forEach(x => x.className = ''); b.className = 'sel-' + b.dataset.v; resultado(); }));
   perguntas.appendChild(d);
 });
+// primeira palavra com maiúscula, as demais em minúscula, e "e" antes da última
+function lista(a) {
+  const t = a.map((x, i) => i ? x.charAt(0).toLowerCase() + x.slice(1) : x);
+  return t.length > 1 ? t.slice(0, -1).join(', ') + ' e ' + t[t.length - 1] : t[0];
+}
 function resultado() {
   if (resp.includes(null)) return;
   const nao = PERG.filter((_, i) => resp[i] === 'n');
   const r = $('resultado'); r.classList.add('on');
   if (!nao.length) { r.innerHTML = `<h3>Você já cobre o básico.</h3><p>Ótimo. O guia ainda ajuda onde a IA mais escorrega: pedir por etapas, provar que o número está certo e documentar o que foi feito.</p><div class="caps"><span class="pill" data-c="08">Capítulo 8</span><span class="pill" data-c="09">Capítulo 9</span></div>`; }
-  else { const caps = [...new Set(nao.flatMap(n => n.cap))]; r.innerHTML = `<h3>${nao.length === 1 ? 'Há 1 ponto' : 'Há ' + nao.length + ' pontos'} a resolver.</h3><p>${nao.map(n => n.rotulo).join(', ')}. É exatamente o que estes capítulos tratam:</p><div class="caps">${caps.map(c => `<span class="pill" data-c="${c}">Capítulo ${c.replace(/^0/, '')}</span>`).join('')}</div>`; }
+  else { const caps = [...new Set(nao.flatMap(n => n.cap))]; r.innerHTML = `<h3>${nao.length === 1 ? 'Há 1 ponto' : 'Há ' + nao.length + ' pontos'} a resolver.</h3><p>${lista(nao.map(n => n.rotulo))}. É exatamente o que estes capítulos tratam:</p><div class="caps">${caps.map(c => `<span class="pill" data-c="${c}">Capítulo ${c.replace(/^0/, '')}</span>`).join('')}</div>`; }
   r.querySelectorAll('.pill').forEach(p => p.addEventListener('click', () => abre(CAPS.findIndex(c => c.num === p.dataset.c))));
 }
 
